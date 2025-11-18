@@ -10,7 +10,7 @@ from glob import glob
 expected_rates = {
     "EDA": 15,
     "PPG": 25,
-    "Temperature": 7.5,
+    "Skin-Temp": 7.5,
     "Motion": 25
 }
 
@@ -60,7 +60,7 @@ def expand_data(df, expected_rates):
 
         # Temperature
         if "thr" in sensor_data:
-            interval = 1 / expected_rates["Temperature"]
+            interval = 1 / expected_rates["Skin-Temp"]
             times = [timestamp + (interval * i) for i in range(len(sensor_data["thr"]))]
             for ts, thr in zip(times, sensor_data["thr"]):
                 temp_data.append({"timestamp": ts, "Temp": round(thr, 2)})
@@ -118,7 +118,7 @@ def resample_data(df, expected_rate):
 
 # ---------- IO layout ----------
 indir = "../datasets/raw/emotibit/"
-outdir = "../datasets/transformed/phys/"
+outdir = "../datasets/transform/phys/"
 
 # Pattern: P##_<condition>_<anything>.csv  e.g., P01_HT_Loc2.csv
 fname_re = re.compile(r'^(P\d+)_([A-Za-z0-9]+)_.+\.csv$')
@@ -156,13 +156,13 @@ for file in file_list:
 
     eda_df_resampled   = resample_data(eda_df,   expected_rates["EDA"])
     ppg_df_resampled   = resample_data(ppg_df,   expected_rates["PPG"])
-    temp_df_resampled  = resample_data(temp_df,  expected_rates["Temperature"])
+    temp_df_resampled  = resample_data(temp_df,  expected_rates["Skin-Temp"])
     motion_df_resampled= resample_data(motion_df,expected_rates["Motion"])
 
     # Save flat files inside the participant dir
     eda_df_resampled.to_csv(   os.path.join(participant_dir, f"{prefix}_eda.csv"),    index=False)
     ppg_df_resampled.to_csv(   os.path.join(participant_dir, f"{prefix}_ppg.csv"),    index=False)
-    temp_df_resampled.to_csv(  os.path.join(participant_dir, f"{prefix}_temp.csv"),   index=False)
+    temp_df_resampled.to_csv(  os.path.join(participant_dir, f"{prefix}_st.csv"),   index=False)
     motion_df_resampled.to_csv(os.path.join(participant_dir, f"{prefix}_motion.csv"), index=False)
 
     print(f"Saved processed data in {participant_dir}")

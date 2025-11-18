@@ -2,12 +2,12 @@ import pandas as pd
 import pytz
 
 # Load the survey responses dataset again
-file_path = 'C:/Users/Tomar/dev/datasets/WEPOP_summer2024/survey_responses.csv'
+file_path = '../../datasets/raw/survey/survey-responses.csv'
 survey_data = pd.read_csv(file_path)
 
 # Filter and process relevant columns for the analysis
 perception_columns = [
-    'user_id',
+    'participant_id',
     'session_start',
     'thermal_perception_Q1: What is your thermal sensation in this room? [-2,2]',
     'thermal_perception_Q2: Choose your thermal comfort in this room [-2,2]',
@@ -31,8 +31,8 @@ perception_columns = [
 # Subset the data to the relevant columns for perception analysis
 perception_data = survey_data[perception_columns]
 
-# Convert perception columns (excluding user_id and session_start) to integers
-perception_only_columns = perception_columns[2:]  # Exclude 'user_id' and 'session_start'
+# Convert perception columns (excluding participant_id and session_start) to integers
+perception_only_columns = perception_columns[2:]  # Exclude 'participant_id' and 'session_start'
 perception_data[perception_only_columns] = perception_data[perception_only_columns].apply(pd.to_numeric, errors='coerce').astype('Int64')
 
 # Convert session_start to datetime for ordering survey rounds
@@ -45,21 +45,21 @@ perception_data['session_start'] = perception_data['session_start'].dt.tz_conver
 # Remove the timezone offset and microseconds, keeping only date and time up to seconds
 perception_data['session_start'] = perception_data['session_start'].dt.strftime('%Y-%m-%d %H:%M:%S')
 
-# Grouping data by 'user_id' to ensure each user has all five perception rounds
-grouped_perception_data = perception_data.groupby('user_id').apply(
+# Grouping data by 'participant_id' to ensure each user has all five perception rounds
+grouped_perception_data = perception_data.groupby('participant_id').apply(
     lambda x: x.sort_values(by='session_start')).reset_index(drop=True)
 
 # Update labels to match the instruction of skipping the Initial Survey
 labels = ['perception_survey_1', 'perception_survey_2', 'perception_survey_3', 'perception_survey_4', 'perception_survey_5']
 
 # Assign perception survey labels skipping 'Initial Survey' based on the order of appearance for each user
-grouped_perception_data['Label'] = grouped_perception_data.groupby('user_id').cumcount().map(dict(enumerate(labels, 1)))
+grouped_perception_data['Label'] = grouped_perception_data.groupby('participant_id').cumcount().map(dict(enumerate(labels, 1)))
 
 # Filter out the "Initial Survey" from the data
 filtered_perception_data = grouped_perception_data.dropna(subset=['Label'])
 
 # Save the resulting DataFrame to a CSV file in the local directory
-output_file_path = 'C:/Users/Tomar/dev/WEPOP_summer2024/results/perception_survey_responses.csv'
+output_file_path = '../../datasets/transformed/survey/Response-Perception.csv'
 filtered_perception_data.to_csv(output_file_path, index=False)
 
 # Output file path for the user

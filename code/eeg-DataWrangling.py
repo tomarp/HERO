@@ -55,6 +55,6 @@ def process_eeg_files(input_directory, output_root):
 
 # Set your input and output directories
 indir = "../datasets/raw/eeg/"
-outdir = "../datasets/transformed/phys/"
+outdir = "../datasets/transform/phys/"
 
 process_eeg_files(indir, outdir)

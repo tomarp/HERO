@@ -2,6 +2,7 @@
 """
 Usage:
     python env_processing.py --input ./data/input --output ./data/output
+    
     %run env_processing.py --input ../datasets/raw/env --output ../datasets/transformed/env/
 
 """
