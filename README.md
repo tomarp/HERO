@@ -1,12 +1,12 @@
-# Human Experience in Regulated Offices (HERO) dataset
-
-### Experiment Objective
+# Human Experience in Regulated Offices (HERO) study
+---
+### Study Objective
 The primary goal of this experiment was to assess how environmental conditions, particularly temperature, impact the perception of comfort and productivity among office workers. The study focused on how personal characteristics affect multi-domain comfort perception by monitoring physiological responses, complemented by survey-based validation.
 
-### Experimental Setup
+### Method
 A total of 24 participants were involved in the experiment study. Each participant was required to perform a series of four activities in sequence reading, writing, discussion, call in an office setting, with two participants present at a time in the office room. The experiment was conducted in two seperate sessions under different temperature conditions: low (22°C) and high (30°C). The temperature was the only environmental variable altered between two sessions while the activities sequence remained similar. Each session was paired with a different reading content to ensure variation in the cognitive tasks while maintaining the activity occurance.
 
-![](/Volumes/dev/20240801_HERO/HERO/metadata/HERO_Overview.png)
+![Study overview](https://github.com/tomarp/HERO/blob/main/metadata/HERO_Overview.png)
 
 
 ### Activities
@@ -44,7 +44,8 @@ The sequence of events occurance during each session was as follows:
 
 9. **Perception Survey (Post-Conference Call)**: After the conference call, the final perception survey was completed.
 
-### Multi-Modal Data Collection
+## Dataset 
+Link to the dataset: [Zenodo](https://zenodo.org/records/17597414)
 
 Throughout the experiment, a comprehensive set of data was collected across multiple channels:
 
@@ -161,7 +162,7 @@ The EEG data files for participants in cold (trial A) and hot (trial B) conditio
 
 EEG frequencies above 50 Hz are typically less useful for analysis as they often consist of noise or muscle artifacts.
 
-# EEG Bands and Their Significance
+### EEG Bands and Their Significance
 
 ## Delta (0.5–4 Hz)
 - **Associated with**: Deep sleep and restorative processes.  
