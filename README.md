@@ -16,7 +16,6 @@ If you are looking for the dataset itself, see:
 > **Zenodo:** https://zenodo.org/records/17597414
 
 ---
-![Study overview](https://github.com/tomarp/HERO/blob/main/metadata/HERO_Overview.png)
 
 ## 1. Project snapshot
 
@@ -37,6 +36,8 @@ HERO combines **building science**, **physiological signal processing**, and **a
 ---
 
 ## 2. Study design
+
+![Study overview](https://github.com/tomarp/HERO/blob/main/metadata/HERO_Overview.png)
 
 ### Participants
 
