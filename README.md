@@ -1,31 +1,30 @@
 # HERO – Human Experience in Regulated Offices
 
-This repository is the main **project hub** for the  
-**Human Experience in Regulated Offices (HERO)** study within the **MuSIC_IRP1** initiative.
+This repository is the main **project hub** for the  **Human Experience in Regulated Offices (HERO)** study within the [MuSIC IRP1](https://music-dn.com/individual-research-projects-wp2/#:~:text=DC1.%20Steady%2Dstate%20neurological%20reaction%20and%20perception) initiative.
 
 It brings together:
 
 - the **experimental design** and protocol,
-- the **multimodal dataset** (via Zenodo),
-- the **analysis and preprocessing pipelines** (EEG, EDA, skin temperature, environment, surveys),
+- the **multimodal dataset** (published on Zenodo),
+- the **analysis and preprocessing pipelines** for all data modalities,
 - and the evolving **research questions and publications**.
 
-If you are looking for the dataset itself, see:
-
-> **Dataset:** MuSIC\_IRP1_HERO – Multimodal Human Experience in Regulated Offices  
-> **Zenodo:** https://zenodo.org/records/17597414
+If you are looking for the dataset itself, visit [ZENODO](https://zenodo.org/records/17597414)
 
 ---
 
 ## 1. Project snapshot
 
-**Goal.** HERO investigates how controlled indoor thermal environments (cool vs warm office conditions) shape:
+This study is designed to investigate research on topics
 
-- **physiology** (EEG, electrodermal activity, skin temperature),
-- **subjective experience** (thermal comfort, affect, workload),
-- and **task performance** during realistic office-like activities.
+* **Neurophysiological dynamics** and how brain–body systems adapt under varying thermal conditions
+* **Thermal comfort and thermal stress modeling**, including inter-individual variability and time-dependent responses to thermal load
+* **Affective and cognitive responses under thermal challenge**, capturing how temperature-related strain modulates emotion, attention, workload, and performance
+* **Multimodal signal processing and machine learning** for occupant-centric indoor climate and building design, supporting the development, benchmarking, and validation of methods that fuse physiological, behavioral, and contextual data into robust, human-centered control and design strategies
 
-**Core questions include:**
+leveraging the dataset modelities: **physiology** (EEG, electrodermal activity, skin temperature), **subjective experience** (thermal comfort, affect, workload), **task performance** during realistic office-like activities and **facial expressions** captured in the recorder video data.
+
+#### **Primarily, core research questions include:**
 
 - How do moderate thermal loads (LT vs HT) change **brain rhythms**, **autonomic responses**, and **peripheral temperature** during office work?
 - How well do physiological signals explain or predict **thermal sensation**, **comfort**, and **self-reported workload**?
@@ -128,17 +127,19 @@ Survey instruments capture, per participant/session/phase:
 
 These are aligned via the same `ID_Session` and phase labels as the physiological data.
 
+### 3.5 Video recordings
+
+Laptop webcam videos were recorded during sessions for optional behavioural context and quality control.
+**Raw videos are not included** in this Zenodo deposit for privacy reasons. Instead, we publish a **privacy-preserving derived video modality** under `vid/`. This derived pack is intended to support dataset QC and multimodal analysis while minimizing re-identification risk.
+
 ---
 
 ## 4. Dataset releases
 
-The **canonical data releases** are hosted on Zenodo.  
-This repository contains the **code that produced those releases**.
+The **canonical data releases** are hosted on Zenodo. This repository contains the **code that produced those releases**.
 
-### 4.1 Level-0: timeline-filtered raw (current Zenodo release)
 
-> **MuSIC_IRP1_HERO – Level-0 Physiology & Context**  
-> Zenodo: https://zenodo.org/records/17597414
+### 4.1 Level-0: timeline-filtered raw 
 
 Level-0 consists of **device-level streams**, trimmed to the experimental timeline:
 
@@ -151,7 +152,7 @@ Level-0 consists of **device-level streams**, trimmed to the experimental timeli
 - ST (`st/`):
   - `st/P01/P01_LT_st.csv`, etc.
   - Columns: `datetime`, `ID_Session`, `st`, `phase_name`, `phase_label`, `phase_order`.
-- (Optionally) ENV (`env/`) and SURVEY (`survey/`) tables.
+- ENV (`env/`) and SURVEY (`survey/`) files.
 
 **Important:**  
 At Level-0, **no filters, artefact removal, re-referencing, or resampling are applied**.  
@@ -171,10 +172,15 @@ Each summary row reports:
 - `n_phases_with_data`,
 - `status` (`ok`, `missing_raw`).
 
-### 4.2 Planned Level-1 / Level-2 releases
+### 4.2 Level-1: derived; privacy-preserving
 
-Future releases (referenced here, but not yet necessarily on Zenodo) will include:
+- Video modality
+	- **Manifest** (`vid/metadata/manifest_videos_public.(csv|parquet)`): file-level metadata extracted with `ffprobe` (duration, FPS, resolution, codec information, etc.).
+	- **Derived features** (`vid/features/video_features_summary.(csv|parquet)`): numeric summaries computed via ffmpeg streaming (**no frames/audio exported**), including motion/brightness/sharpness proxies and `face_present_ratio` sampled at low FPS.
+	- **QC + coverage outputs** (`vid/release_pack/`): `video_qc.csv`, `video_coverage.csv`, `video_paired_deltas.csv`, and JSON summaries documenting thresholds and dataset-level counts.
 
+
+## 5 Pipeline workflow (Level-1 / Level-2)
 - **Level-1 (preprocessed physiologic streams)**  
   - EEG in MNE FIF format:
     - Band-pass and notch filtered.
@@ -187,35 +193,8 @@ Future releases (referenced here, but not yet necessarily on Zenodo) will includ
   - Phase-level aggregations (per participant/session/phase).
   - Multimodal fusion tables combining physiology, environment, and surveys.
 
-This GitHub repo contains the **pipelines that generate Level-1 and Level-2 from Level-0.**
 
 ---
-
-## 5. Repository structure (conceptual)
-
-The exact layout may evolve, but core components are:
-
-```text
-.
-├─ code/
-│   ├─ filter_raw_eeg_by_timeline.py        # Level-0 EEG trimming (ts → phases)
-│   ├─ filter_emotibit_eda_st_by_timeline.py# Level-0 EDA/ST trimming (datetime → phases)
-│   ├─ muse_eeg_pipeline.py                 # Level-1 EEG preprocessing (MNE + ICA)
-│   ├─ eda_pipeline.py                      # Level-1 EDA preprocessing (planned/ongoing)
-│   ├─ st_pipeline.py                       # Level-1 ST preprocessing (planned/ongoing)
-│   └─ helpers/                             # Shared utilities
-├─ notebooks/
-│   ├─ 01_exploratory_eeg.ipynb
-│   ├─ 02_exploratory_eda_st.ipynb
-│   ├─ 03_multimodal_phases.ipynb
-│   └─ ...
-├─ docs/
-│   ├─ protocol/
-│   │   └─ hero_experiment_protocol.pdf
-│   ├─ figures/
-│   └─ ...
-└─ README.md                                # (this file)
-```
 
 
 ## 6. Pipelines
@@ -252,6 +231,33 @@ Key steps implemented in muse_eeg_pipeline.py and/or notebooks:
 7. Export cleaned EEG as FIF + QC reports and plots.
 
 Similarly structured pipelines are being developed for EDA/ST (Level-1) and for feature extraction (Level-2).
+
+## 7. Repository structure (conceptual)
+
+The exact layout may evolve, but core components are:
+
+```text
+.
+├─ code/
+│   ├─ filter_raw_eeg_by_timeline.py        # Level-0 EEG trimming (ts → phases)
+│   ├─ filter_emotibit_eda_st_by_timeline.py# Level-0 EDA/ST trimming (datetime → phases)
+│   ├─ muse_eeg_pipeline.py                 # Level-1 EEG preprocessing (MNE + ICA)
+│   ├─ eda_pipeline.py                      # Level-1 EDA preprocessing (planned/ongoing)
+│   ├─ st_pipeline.py                       # Level-1 ST preprocessing (planned/ongoing)
+│   └─ helpers/                             # Shared utilities
+├─ notebooks/
+│   ├─ 01_exploratory_eeg.ipynb
+│   ├─ 02_exploratory_eda_st.ipynb
+│   ├─ 03_multimodal_phases.ipynb
+│   └─ ...
+├─ docs/
+│   ├─ protocol/
+│   │   └─ hero_experiment_protocol.pdf
+│   ├─ figures/
+│   └─ ...
+└─ README.md                                # (this file)
+```
+
 
 ---
 ### Citation and licensing
